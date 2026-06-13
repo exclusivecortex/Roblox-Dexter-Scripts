@@ -14,9 +14,17 @@ local PVE_PLACE_IDS = {
 }
 
 local function loadRemoteScript(url)
-    task.spawn(function()
-        loadstring(game:HttpGet(url .. "?v=" .. tostring(os.time())))()
-    end)
+    local src = game:HttpGet(url .. "?v=" .. tostring(os.time()))
+
+local fn, err = loadstring(src)
+
+if not fn then
+    warn("Compile error:", err)
+    warn(src)
+    return
+end
+
+fn()
 end
 
 local function loadPvp()
